@@ -20,11 +20,11 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} # GitHub Secret for Access Key ID
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # GitHub Secret for Secret Access Key
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Sync files to S3 bucket
         run: |
-          aws s3 sync . s3://${{ env.S3_BUCKET_NAME }} \
+          aws s3 sync . s3://${{ secrets.S3_BUCKET_NAME }} \
             --delete \
             --exclude ".git/*" \
             --exclude ".github/*" \
@@ -33,5 +33,5 @@ jobs:
       - name: Create CloudFront invalidation
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
             --paths "/*" # Invalidate all paths. Use specific paths for more granular invalidation.
